@@ -3,7 +3,7 @@ import { Outlet } from "react-router-dom";
 import TeacherNavigationBar from "./TeacherNavbar";
 
 
-export default () => {
+const LayoutTeacherNav = () => {
     return (
       <>
         <TeacherNavigationBar />
@@ -11,3 +11,5 @@ export default () => {
       </>
     );
   };
+
+export default LayoutTeacherNav

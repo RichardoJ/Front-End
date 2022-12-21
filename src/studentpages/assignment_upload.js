@@ -32,8 +32,9 @@ function AssignmentStudentUpload(props) {
     getData().catch((error) => {
       setError(error.message);
     })
-    
-  }, []);
+  
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  },[]);
 
   const fileChangeHandler = (e) => {
     e.preventDefault();
@@ -59,6 +60,17 @@ function AssignmentStudentUpload(props) {
       .catch((err) => {
         alert(err.message);
       });
+  }
+
+  if (error) {
+    return (
+      <section
+        className="mt-3"
+        style={{ textAlignVertical: "center", textAlign: "center" }}
+      >
+        <p>{error}</p>
+      </section>
+    );
   }
 
   return (

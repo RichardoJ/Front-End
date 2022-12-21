@@ -9,8 +9,6 @@ function Home() {
   const authCtx = useContext(AuthContext);
 
   useEffect(() => {
-    console.log("Validation Status : " + authCtx.validation);
-    console.log("ID DB : " + authCtx.idDB);
     const getData = async () => {
       if(authCtx.validation === null) {
         const responseTwo = await fetch("/auth/validate", {
@@ -38,7 +36,21 @@ function Home() {
       setLoading(false);
       setError(error.message);
     });
-  }, []);
+  
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  },[]);
+
+  if(loading){
+    return <section className="mt-3" style={{textAlignVertical: "center",textAlign: "center"}}>
+      <p>A moment please...</p>
+    </section>
+  }
+
+  if(error){
+    return <section className="mt-3" style={{textAlignVertical: "center",textAlign: "center"}}>
+      <p>{error}</p>
+    </section>
+  }
 
   return (
     <div>

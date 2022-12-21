@@ -26,26 +26,6 @@ function AuthForm() {
     reset: resetEmailInput,
   } = useInput((value) => value.includes("@"));
 
-  //Name
-  const {
-    value: enteredName,
-    isValid: enteredNameIsValid,
-    hasError: nameInputHasError,
-    valueChangeHandler: nameChangeHandler,
-    inputBlurHandler: nameBlurHandler,
-    reset: resetNameInput,
-  } = useInput((value) => value.trim() !== "");
-
-  //Address
-  const {
-    value: enteredAddress,
-    isValid: enteredAddressIsValid,
-    hasError: addressInputHasError,
-    valueChangeHandler: addressChangeHandler,
-    inputBlurHandler: addressBlurHandler,
-    reset: resetAddressInput,
-  } = useInput((value) => value.trim() !== "");
-
   //Password
   const {
     value: enteredPassword,
@@ -55,16 +35,6 @@ function AuthForm() {
     inputBlurHandler: passwordBlurHandler,
     reset: resetPasswordInput,
   } = useInput((value) => value.length >= 8);
-
-  //Semester
-  const {
-    value: enteredSemester,
-    isValid: enteredSemesterIsValid,
-    hasError: semesterInputHasError,
-    valueChangeHandler: semesterChangeHandler,
-    inputBlurHandler: semesterBlurHandler,
-    reset: resetSemesterInput,
-  } = useInput((value) => value > 0 && value < 12);
 
   const submitHandler = (event) => {
     event.preventDefault();
@@ -130,10 +100,14 @@ function AuthForm() {
 
               authCtx.setID(data.ID);
               authCtx.setRole(data.role);
+              resetEmailInput();
+              resetPasswordInput();
               navigate('/student/home');
             }else if(data.role === "TEACHER"){
               authCtx.setID(data.ID);
               authCtx.setRole(data.role);
+              resetEmailInput();
+              resetPasswordInput();
               navigate('/teacher/home');
             }
           })
@@ -143,87 +117,6 @@ function AuthForm() {
         });
      
 
-    } else {
-      fetch(url, {
-        method: "POST",
-        body: JSON.stringify({
-          email: enteredEmail,
-          password: enteredPassword,
-          returnSecureToken: true,
-        }),
-        headers: {
-          "Content-Type": "application/json",
-        },
-      })
-        .then((res) => {
-          setIsLoading(false);
-          if (res.ok) {
-            return res.json();
-          } else {
-            return res.json().then((data) => {
-              let errorMessage = "Authentication Failed!";
-              // if(data && data.error && data.error.message){
-              //   errorMessage = data.error.message;
-              // }
-              throw new Error(errorMessage);
-            });
-          }
-        })
-        .then((data) => {
-          const expirationTime = new Date(
-            new Date().getTime() + +data.expiresIn * 1000
-          );
-          authCtx.login(data.idToken, data.localId, expirationTime.toISOString());
-          console.log("Success");
-          navigate('/student/home');
-          //Save the new user
-          const user = {
-            student_name: enteredName,
-            student_email: enteredEmail,
-            student_password: enteredPassword,
-            student_address: enteredAddress,
-            student_semester: parseInt(enteredSemester),
-          };
-          fetch("/student/", {
-            method: "POST",
-            headers: {
-              Accept: "application/json",
-              "Content-Type": "application/json",
-            },
-            body: JSON.stringify(user),
-          })
-            .then((res2) => {
-              setIsLoading(false);
-              if (res2.ok) {
-                console.log("saved to db");
-                return res2.json();
-              } else {
-                return res2.json().then((data) => {
-                  let errorMessage = "";
-                  if (data && data.error && data.error.message) {
-                    errorMessage = data.error.message;
-                  }
-                  throw new Error(errorMessage);
-                });
-              }
-            })
-            .then((data2) => {
-              authCtx.setID(data2.id);
-              localStorage.setItem('token', data.idToken);
-              console.log(authCtx.isLoggedIn);
-            });
-          fetch("/admin/student-claims/" + data.localId, {
-            method: "POST",
-            headers: {
-              Accept: "application/json",
-              "Content-Type": "application/json",
-            },
-          });
-        })
-        .catch((err) => {
-          alert(err.message);
-        });
-        
     }
   };
 
@@ -232,22 +125,6 @@ function AuthForm() {
       <h1>Login</h1>
       <form onSubmit={submitHandler}>
       {/* <form> */}
-        {!isLogin && (
-          <div className={classes.control}>
-            <label htmlFor="Name">Your Name</label>
-            <input
-              type="text"
-              id="name"
-              required
-              onChange={nameChangeHandler}
-              onBlur={nameBlurHandler}
-              value={enteredName}
-            />
-            {nameInputHasError && (
-              <p className={classes.error}>Name must no be empty</p>
-            )}
-          </div>
-        )}
         <div className={classes.control}>
           <label htmlFor="email">Your Email</label>
           <input
@@ -277,39 +154,7 @@ function AuthForm() {
               Please enter a valid password with 8 characters or more
             </p>
           )}
-        </div>
-        {!isLogin && (
-          <div className={classes.control}>
-            <label htmlFor="address">Your Address</label>
-            <input
-              type="text"
-              id="address"
-              required
-              onChange={addressChangeHandler}
-              onBlur={addressBlurHandler}
-              value={enteredAddress}
-            />
-            {addressInputHasError && (
-              <p className={classes.error}>Address must not be empty</p>
-            )}
-          </div>
-        )}
-        {!isLogin && (
-          <div className={classes.control}>
-            <label htmlFor="semester">Your semester</label>
-            <input
-              type="number"
-              id="semester"
-              required
-              onChange={semesterChangeHandler}
-              onBlur={semesterBlurHandler}
-              value={enteredSemester}
-            />
-            {semesterInputHasError && (
-              <p className={classes.error}>Please enter a number</p>
-            )}
-          </div>
-        )}
+        </div>  
         <div className={classes.actions}>
           {!isLoading && (
             <button id="btnLogin">{isLogin ? "Login" : "Create Account"}</button>

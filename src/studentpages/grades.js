@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useState } from "react";
-import { Button, Col, Row, Table } from "react-bootstrap";
+import { Table } from "react-bootstrap";
 import AuthContext from "../store/auth-context";
 
 function Grades() {
@@ -11,29 +11,31 @@ function Grades() {
 
   useEffect(() => {
     const getData = async () => {
-      // if (localStorage.getItem("courses") == null) {
-      //   const response = await fetch(
-      //     "/enrollment/" + authCtx.idDB + "/student_course/list"
-      //   );
+      if (localStorage.getItem("cobacourses") == null) {
+        const response = await fetch(
+          "/enrollment/" + authCtx.idDB + "/student_course/list"
+        );
   
-      //   if (!response.ok) {
-      //     throw new Error("Something Went Wrong!");
-      //   }
+        if (!response.ok) {
+          throw new Error("Something Went Wrong!");
+        }
   
-      //   const responseData = await response.json();
-      //   localStorage.setItem("courses", JSON.stringify(responseData));
-      // }
-
-      // const idCourses = JSON.parse(localStorage.getItem('courses'));
-      // console.log(idCourses);
+        const responseData = await response.json();
+        localStorage.setItem("cobacourses", JSON.stringify(responseData));
+        setCourses(responseData);
+        // eslint-disable-next-line
+        const courseList = responseData.map((course, idx) => (
+          idCourses.push(course.id)  
+        ));
+      }
 
       const idCourses = [];
-      const courses = JSON.parse(localStorage.getItem('cobacourse'));
-      setCourses(courses);
-      const courseList = courses.map((course, idx) => (
+      const courses2 = JSON.parse(localStorage.getItem('cobacourse'));
+      setCourses(courses2);
+      // eslint-disable-next-line
+      const courseList = courses2.map((course, idx) => (
         idCourses.push(course.id)  
       ));
-      console.log(idCourses);
 
       const responseTwo = await fetch("/answer/average/" + authCtx.idDB, {
         method: "POST",
@@ -59,7 +61,8 @@ function Grades() {
       setLoading(false);
       setError(error.message);
     })
-    
+  
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   if(loading){

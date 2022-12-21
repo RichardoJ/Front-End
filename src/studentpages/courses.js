@@ -30,7 +30,7 @@ function Courses() {
       setLoading(false);
       setError(error.message);
     })
-    
+  // eslint-disable-next-line react-hooks/exhaustive-deps 
   }, []);
 
   if(loading){

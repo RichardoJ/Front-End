@@ -7,24 +7,20 @@ function Modules() {
   const params = useParams();
 
   const [modules, setModules] = useState([]);
-  const [assignments, setAssignments] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
 
   useEffect(() => {
     const getData = async () => {
       const response = await fetch('/modules/course/' + params.courseID);
-      const responseTwo = await fetch('/modules/' + params.courseID + '/assignmentByCourse')
 
       if(!response.ok){
         throw new Error('Something Went Wrong!');
       }
 
       const responseData = await response.json();
-      const responseDataTwo = await responseTwo.json();
 
       setModules(responseData);
-      setAssignments(responseDataTwo);
       setLoading(false)
     };
 
@@ -36,8 +32,9 @@ function Modules() {
         setError(error.message);
       }
     })
-    
-  }, []);
+  
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [modules]);
 
   if(loading){
     return <section className="mt-3" style={{textAlignVertical: "center",textAlign: "center"}}>

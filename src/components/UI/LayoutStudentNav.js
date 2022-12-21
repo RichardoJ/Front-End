@@ -2,7 +2,7 @@ import React from "react";
 import NavigationBar from "./Navbar";
 import { Outlet } from "react-router-dom";
 
-export default () => {
+const LayoutStudentNav = () => {
     return (
       <>
         <NavigationBar />
@@ -10,3 +10,5 @@ export default () => {
       </>
     );
   };
+
+export default LayoutStudentNav;

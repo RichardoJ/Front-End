@@ -4,7 +4,6 @@ import { Link } from "react-router-dom";
 import AuthContext from "../store/auth-context";
 
 function Assignment(props) {
-  const [courses, setCourses] = useState([]);
   const [assignments, setAssignment] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
@@ -76,6 +75,8 @@ function Assignment(props) {
       setLoading(false);
       setError(error.message);
     });
+  
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   if (loading) {
@@ -112,7 +113,7 @@ function Assignment(props) {
       }
       }
     }
-    if(tdList.length == 0){
+    if(tdList.length === 0){
       tdList.push(<td>-</td>);
       tdList.push(<td>Not Submitted</td>);
     }

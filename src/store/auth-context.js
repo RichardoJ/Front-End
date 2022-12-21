@@ -80,7 +80,7 @@ export const AuthContextProvider = (props) => {
     if(logoutTimer){
       clearTimeout(logoutTimer)
     }
-  });
+  }, []);
 
   const loginHandler = (token, uid, expirationTime) => {
     console.log(token);
