@@ -21,6 +21,8 @@ jobs:
         run: npm install
       - name : Build Front-End  
         run: npm run build
+        env: 
+          CI: ""
   
   test:
       name: Test
@@ -32,5 +34,6 @@ jobs:
       - name: Cypress run
         uses: cypress-io/github-action@v5
         with:
-          browser: edge
+          build: npm run build
+          start: npm start
     
