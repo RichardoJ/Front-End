@@ -28,6 +28,12 @@ function ModuleForm() {
     reset: resetDetailsInput,
   } = useInput((value) => value.trim() !== "");
 
+  let formIsValid = false;
+
+  if(enteredNameIsValid && enteredDetailsIsValid){
+    formIsValid = true;
+  };
+
   const fileChangeHandler = (e) => {
     e.preventDefault();
     setFile(e.target.files[0]);
@@ -93,7 +99,7 @@ function ModuleForm() {
           <Form.Label>Input Module Files here</Form.Label>
           <Form.Control type="file" onChange={fileChangeHandler}/>
         </Form.Group>
-        <Button variant="primary" type="submit">
+        <Button variant="primary" type="submit" disabled={!formIsValid}>
           Submit
         </Button>
       </Form>

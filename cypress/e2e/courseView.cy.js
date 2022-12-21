@@ -28,6 +28,7 @@ describe('test course view', () => {
             },
             []
           ).as('validate')
+          cy.wait('@getUsers')
       })
 
     it('Go To Course Page', () => {
