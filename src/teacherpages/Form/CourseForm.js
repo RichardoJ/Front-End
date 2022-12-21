@@ -1,15 +1,18 @@
-import React, { useContext } from "react";
+import React, { useContext, useState } from "react";
 import { Alert } from "react-bootstrap";
 import Button from "react-bootstrap/Button";
 import Col from "react-bootstrap/Col";
 import Form from "react-bootstrap/Form";
 import Row from "react-bootstrap/Row";
 import AuthContext from "../../store/auth-context";
+import classes from "./CourseForm.module.css";
 
 import useInput from "../Hooks/use-input";
 
 function CourseForm() {
   const authCtx = useContext(AuthContext);
+  const [success, setSuccess] = useState(false);
+
   //Name
   const {
     value: enteredName,
@@ -60,6 +63,12 @@ function CourseForm() {
     reset: resetLinkInput
   } = useInput((value) => value.trim() !== "");
 
+  let formIsValid = false;
+
+  if(enteredNameIsValid && enteredStartDateIsValid && enteredEndDateIsValid && enteredDetailIsValid && enteredLinkIsValid){
+    formIsValid = true;
+  };
+
   const formSubmissionHandler = (event) => {
     event.preventDefault();
     // if (!enteredNameIsValid) {
@@ -76,7 +85,6 @@ function CourseForm() {
     console.log(JSON.stringify(course));
 
     let url = '/course/add/' + authCtx.idDB;
-    console.log(url);
 
     fetch(url, {
       method: "POST",
@@ -99,7 +107,7 @@ function CourseForm() {
       resetEndDateInput()
       resetDetailInput()
       resetLinkInput()
-      {<Alert>Success</Alert>}
+      setSuccess(true);
     })
 
     
@@ -119,6 +127,9 @@ function CourseForm() {
           onBlur={nameBlurHandler}
           value={enteredName}
           />
+          {nameInputHasError && (
+            <p className={classes.error}>Please Enter A Course Name</p>
+          )}
         </Form.Group>
 
         <Form.Group as= {Col} className="mb-3" controlId="formStartDate">
@@ -129,6 +140,9 @@ function CourseForm() {
           onChange={startDateChangeHandler}
           onBlur={startDateBlurHandler}
           value={enteredStartDate}/>
+          {startDateInputHasError && (
+            <p className={classes.error}>Please Enter a Start Date</p>
+          )}
         </Form.Group>
 
         <Form.Group as= {Col} className="mb-3" controlId="formEndDate">
@@ -139,6 +153,9 @@ function CourseForm() {
           onChange={endDateChangeHandler}
           onBlur={endDateBlurHandler}
           value={enteredEndDate} />
+          {endDateInputHasError && (
+            <p className={classes.error}>Please Enter An End Date</p>
+          )}
         </Form.Group>
 
         <Form.Group className="mb-3" controlId="formCourseDetails">
@@ -149,6 +166,9 @@ function CourseForm() {
           onBlur={detailBlurHandler}
           value={enteredDetail}
           />
+          {detailInputHasError && (
+            <p className={classes.error}>Please Enter the Details Course</p>
+          )}
         </Form.Group>
 
         <Form.Group className="mb-3" controlId="formCourseLink">
@@ -160,11 +180,15 @@ function CourseForm() {
           onBlur={linkBlurHandler}
           value={enteredLink}
           />
+          {linkInputHasError && (
+            <p className={classes.error}>Please Enter the Course Link</p>
+          )}
         </Form.Group>
-        <Button variant="primary" type="submit">
+        <Button variant="primary" type="submit" disabled={!formIsValid}>
           Submit
         </Button>
       </Form>
+      {success === true && <Alert>Success</Alert>}
     </Row>
   );
 }

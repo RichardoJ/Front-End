@@ -7,16 +7,11 @@ import classes from "./auth.module.css";
 function AuthForm() {
   let navigate = useNavigate();
   const authCtx = useContext(AuthContext);
-  console.log("Status : " + authCtx.isLoggedIn);
-  const [isLogin, setIsLogin] = useState(true);
   const [isLoading, setIsLoading] = useState(false);
+  let formIsValid = false;
 
-  const switchAuthModeHandler = () => {
-    setIsLogin((prevState) => !prevState);
-  };
 
-  
-
+  //Name
   const {
     value: enteredEmail,
     isValid: enteredEmailIsValid,
@@ -36,88 +31,80 @@ function AuthForm() {
     reset: resetPasswordInput,
   } = useInput((value) => value.length >= 8);
 
+  if(enteredEmailIsValid && enteredPasswordIsValid){
+    formIsValid = true;
+  }
+
+
   const submitHandler = (event) => {
     event.preventDefault();
 
     setIsLoading(true);
-    let url;
-    if (isLogin) {
-      url =
-        "https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=AIzaSyDccKXMRv1RtSZ5zm--yE-kmPYBW7JGq9k";
-    } else {
-      url =
-        "https://identitytoolkit.googleapis.com/v1/accounts:signUp?key=AIzaSyDccKXMRv1RtSZ5zm--yE-kmPYBW7JGq9k";
-    }
-
-    if (isLogin) {
-      fetch(url, {
-        method: "POST",
-        body: JSON.stringify({
-          email: enteredEmail,
-          password: enteredPassword,
-          returnSecureToken: true,
-        }),
-        headers: {
-          "Content-Type": "application/json",
-        },
+    let url = "https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=AIzaSyDccKXMRv1RtSZ5zm--yE-kmPYBW7JGq9k";
+    fetch(url, {
+      method: "POST",
+      body: JSON.stringify({
+        email: enteredEmail,
+        password: enteredPassword,
+        returnSecureToken: true,
+      }),
+      headers: {
+        "Content-Type": "application/json",
+      },
+    })
+      .then((res) => {
+        setIsLoading(false);
+        if (res.ok) {
+          return res.json();
+        } else {
+          return res.json().then((data) => {
+            let errorMessage = "Authentication Failed!";
+            // if(data && data.error && data.error.message){
+            //   errorMessage = data.error.message;
+            // }
+            throw new Error(errorMessage);
+          });
+        }
       })
-        .then((res) => {
-          setIsLoading(false);
+      .then((data) => {
+        const expirationTime = new Date(
+          new Date().getTime() + +data.expiresIn * 1000
+        );
+        authCtx.login(data.idToken, data.localId, expirationTime.toISOString());
+        fetch("/auth/login/" + enteredEmail, {
+          method:"GET"
+        }).then((res) => {
           if (res.ok) {
             return res.json();
           } else {
             return res.json().then((data) => {
-              let errorMessage = "Authentication Failed!";
-              // if(data && data.error && data.error.message){
-              //   errorMessage = data.error.message;
-              // }
+              let errorMessage = "";
+              if(data && data.error && data.error.message){
+                errorMessage = data.error.message;
+              }
               throw new Error(errorMessage);
             });
           }
+        }).then((data) =>{
+          if(data.role === "STUDENT"){
+            authCtx.setID(data.ID);
+            authCtx.setRole(data.role);
+            resetEmailInput();
+            resetPasswordInput();
+            navigate('/student/home');
+          }else if(data.role === "TEACHER"){
+            authCtx.setID(data.ID);
+            authCtx.setRole(data.role);
+            resetEmailInput();
+            resetPasswordInput();
+            navigate('/teacher/home');
+          }
         })
-        .then((data) => {
-          const expirationTime = new Date(
-            new Date().getTime() + +data.expiresIn * 1000
-          );
-          authCtx.login(data.idToken, data.localId, expirationTime.toISOString());
-          fetch("/auth/login/" + enteredEmail, {
-            method:"GET"
-          }).then((res) => {
-            if (res.ok) {
-              console.log("BERHASIL PAK EKO")
-              return res.json();
-            } else {
-              return res.json().then((data) => {
-                let errorMessage = "";
-                if(data && data.error && data.error.message){
-                  errorMessage = data.error.message;
-                }
-                throw new Error(errorMessage);
-              });
-            }
-          }).then((data) =>{
-            if(data.role === "STUDENT"){
-
-              authCtx.setID(data.ID);
-              authCtx.setRole(data.role);
-              resetEmailInput();
-              resetPasswordInput();
-              navigate('/student/home');
-            }else if(data.role === "TEACHER"){
-              authCtx.setID(data.ID);
-              authCtx.setRole(data.role);
-              resetEmailInput();
-              resetPasswordInput();
-              navigate('/teacher/home');
-            }
-          })
-        })
-        .catch((err) => {
-          alert(err.message);
-        });
-     
-
-    }
+      })
+      .catch((err) => {
+        alert(err.message);
+      });
+   
   };
 
   return (
@@ -157,16 +144,9 @@ function AuthForm() {
         </div>  
         <div className={classes.actions}>
           {!isLoading && (
-            <button id="btnLogin">{isLogin ? "Login" : "Create Account"}</button>
+            <button id="btnLogin" disabled={!formIsValid}>Login</button>
           )}
           {isLoading && <p>Sending Request</p>}
-          {/* <button
-            type="button"
-            className={classes.toggle}
-            onClick={switchAuthModeHandler}
-          >
-            {isLogin ? "Create new account" : "Login with existing account"}
-          </button> */}
           {/* {isLoggedIn && <p>Logged In Successfully</p>} */}
         </div>
       </form>

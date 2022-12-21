@@ -32,6 +32,8 @@ function TeacherModules() {
       }
       
     });
+    
+  // eslint-disable-next-line
   }, [modules]);
 
   if (loading) {
