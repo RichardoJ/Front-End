@@ -1,0 +1,39 @@
+name: cicd pipeline
+
+on:
+  push:
+    branches: [ "master" ]
+  pull_request:
+    branches: [ "master" ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Development Code
+        uses: actions/checkout@v3
+      - name: Use Node.js 17.x
+        uses: actions/setup-node@v1
+        with:
+          node-version: 17.x
+      - name : Install Dependencies
+        run: npm install
+      - name : Build Front-End  
+        run: npm run build
+        env: 
+          CI: ""
+  
+  test:
+      name: Test
+      needs: build
+      runs-on: ubuntu-latest
+      steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+      - name: Cypress run
+        uses: cypress-io/github-action@v5
+        with:
+          build: npm run build
+          start: npm start
+    
