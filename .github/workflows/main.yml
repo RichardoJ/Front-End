@@ -19,10 +19,15 @@ jobs:
           node-version: 17.x
       - name : Install Dependencies
         run: npm install
-      - name : Build Front-End  
-        run: npm run build
-        env: 
-          CI: ""
+      - name : Build Docker Image  
+        run: docker compose build
+      - name: Login to Docker Hub
+        uses: docker/login-action@v2
+        with:
+          username: ${{ secrets.DOCKER_HUB_USERNAME }}
+          password: ${{ secrets.DOCKER_HUB_ACCESS_TOKEN }}
+      - name: Push Docker Image
+        run: docker compose push
   
   test:
       name: Test
