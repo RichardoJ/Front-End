@@ -12,9 +12,7 @@ function Grades() {
   useEffect(() => {
     const getData = async () => {
       if (localStorage.getItem("cobacourses") == null) {
-        const response = await fetch(
-          "/enrollment/" + authCtx.idDB + "/student_course/list"
-        );
+        const response = await fetch('/enrollment/' + authCtx.idDB + '/student_course');
   
         if (!response.ok) {
           throw new Error("Something Went Wrong!");
@@ -22,15 +20,10 @@ function Grades() {
   
         const responseData = await response.json();
         localStorage.setItem("cobacourses", JSON.stringify(responseData));
-        setCourses(responseData);
-        // eslint-disable-next-line
-        const courseList = responseData.map((course, idx) => (
-          idCourses.push(course.id)  
-        ));
       }
 
       const idCourses = [];
-      const courses2 = JSON.parse(localStorage.getItem('cobacourse'));
+      const courses2 = JSON.parse(localStorage.getItem('cobacourses'));
       setCourses(courses2);
       // eslint-disable-next-line
       const courseList = courses2.map((course, idx) => (
@@ -62,8 +55,8 @@ function Grades() {
       setError(error.message);
     })
   
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  
+  }, [authCtx.idDB]);
 
   if(loading){
     return <section className="mt-3" style={{textAlignVertical: "center",textAlign: "center"}}>

@@ -1,17 +1,18 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { Button, Row, Col } from "react-bootstrap";
 import { Link } from "react-router-dom";
 import CustomCardTeacher from "../components/UI/CustomCardTeacher";
+import AuthContext from "../store/auth-context";
 
 function TeacherCourses() {
   const [courses, setCourse] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
+  const authCtx = useContext(AuthContext);
 
   useEffect(() => {
     const getData = async () => {
-      const response = await fetch("/course");
-      //CHANGE : GET DATA FROM TABLE TEACHER_COURSE
+      const response = await fetch("/course/teacher/" + authCtx.idDB);
 
       if (!response.ok) {
         throw new Error("Something Went Wrong!");
@@ -25,9 +26,15 @@ function TeacherCourses() {
 
     getData().catch((error) => {
       setLoading(false);
-      setError(error.message);
+      if(Object.keys(courses).length === 0){
+        setError("No courses found");
+      }else{
+        setError(error.message);
+      }
     });
-  }, [courses]);
+
+    // eslint-disable-next-line
+  }, [authCtx.idDB]);
 
   if (loading) {
     return (
@@ -51,6 +58,18 @@ function TeacherCourses() {
     );
   }
 
+  const passDeletedId = (id) => {
+    console.log(id);
+    const newCourse = [];
+    for (let i = 0; i < courses.length; i++) {
+      // eslint-disable-next-line
+      if(courses[i].id != id){
+        newCourse.push(courses[i]);
+      }
+    }
+    setCourse(newCourse);
+  }
+
   const courseList = courses.map((course, idx) => (
     <div key={course.id}>
       <Col>
@@ -60,6 +79,7 @@ function TeacherCourses() {
           startDate={course.start_date}
           endDate={course.end_date}
           link={course.course_link}
+          passDeletedId={passDeletedId}
         ></CustomCardTeacher>
       </Col>
     </div>

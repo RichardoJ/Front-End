@@ -33,8 +33,8 @@ function Modules() {
       }
     })
   
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [modules]);
+  // eslint-disable-next-line
+  }, [params.courseID]);
 
   if(loading){
     return <section className="mt-3" style={{textAlignVertical: "center",textAlign: "center"}}>

@@ -68,9 +68,6 @@ function StudentForm() {
   //Form Submission
   const formSubmissionHandler = (event) => {
     event.preventDefault();
-    // if (!enteredNameIsValid) {
-    //   return;
-    // }
 
     const user = {
       student_name: enteredName,
@@ -97,7 +94,7 @@ function StudentForm() {
         return res.json();
       } else {
         return res.json().then((data) => {
-          let errorMessage = "Authentication Failed!";
+          let errorMessage = "Failed to Sign up!";
           throw new Error(errorMessage);
         });
       }

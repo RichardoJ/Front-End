@@ -32,10 +32,18 @@ function TeacherStudent() {
       setLoading(false);
       setError(error.message);
     });
-  }, [students]);
+  }, []);
 
   const deleteHandler = (e) => {
     e.preventDefault();
+    const newStudent = [];
+    for (let i = 0; i < students.length; i++) {
+      // eslint-disable-next-line
+      if(students[i].id != e.target.value){
+        newStudent.push(students[i]);
+      }
+    }
+    setStudent(newStudent);
     fetch('/student/' + e.target.value, {
       method: "DELETE"
     })

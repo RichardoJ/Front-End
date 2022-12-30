@@ -6,6 +6,7 @@ function CustomCardTeacher(props) {
 
   const deleteHandler = (e) => {
     e.preventDefault();
+    props.passDeletedId(props.id);
     fetch('/course/' + props.id, {
       method: "DELETE"
     })
@@ -33,7 +34,7 @@ function CustomCardTeacher(props) {
         <Link to={"/teacher/courses/" + props.id + "/modules"}>
           <Button variant="primary" className="me-1">Modules</Button>
         </Link>
-        <Link to={"/student/courses/" + props.id}>
+        <Link to={"/assignmentform/" + props.id}>
           <Button variant="primary" className="me-1">Add Assignment</Button>
         </Link>
         <Button variant="danger" onClick={deleteHandler}>Delete</Button>

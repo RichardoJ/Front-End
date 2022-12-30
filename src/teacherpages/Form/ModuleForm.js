@@ -61,7 +61,7 @@ function ModuleForm() {
       }
     })
     .catch((err) => {
-      alert(err.message);
+      alert('Failed to upload');
     });
 
     resetNameInput();

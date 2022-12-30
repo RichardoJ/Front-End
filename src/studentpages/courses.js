@@ -20,7 +20,7 @@ function Courses() {
 
       const responseData = await response.json();
 
-      localStorage.setItem('cobacourse', JSON.stringify(responseData));
+      localStorage.setItem('cobacourses', JSON.stringify(responseData));
 
       setCourse(responseData);
       setLoading(false)
@@ -30,8 +30,8 @@ function Courses() {
       setLoading(false);
       setError(error.message);
     })
-  // eslint-disable-next-line react-hooks/exhaustive-deps 
-  }, []);
+  
+  }, [authCtx.idDB]);
 
   if(loading){
     return <section className="mt-3" style={{textAlignVertical: "center",textAlign: "center"}}>

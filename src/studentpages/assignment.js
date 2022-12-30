@@ -73,11 +73,15 @@ function Assignment(props) {
 
     getData().catch((error) => {
       setLoading(false);
-      setError(error.message);
+      if(Object.keys(assignments).length === 0){
+        setError("No assignments found");
+      }else{
+        setError(error.message);
+      }
     });
   
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [authCtx.idDB]);
 
   if (loading) {
     return (

@@ -71,10 +71,10 @@ export const AuthContextProvider = (props) => {
     localStorage.removeItem('token');
     localStorage.removeItem('idDB');
     localStorage.removeItem('uID');
-    localStorage.removeItem('role');
     localStorage.removeItem('status');
     localStorage.removeItem('expirationTime');
     localStorage.removeItem('courses');
+    localStorage.removeItem('cobacourses');
     localStorage.removeItem('role');
 
     if(logoutTimer){

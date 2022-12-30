@@ -33,8 +33,8 @@ function AssignmentStudentUpload(props) {
       setError(error.message);
     })
   
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  },[]);
+  
+  },[authCtx.idDB, assignmentId]);
 
   const fileChangeHandler = (e) => {
     e.preventDefault();

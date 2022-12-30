@@ -1,6 +1,5 @@
 import React, { useEffect, useState, useContext } from "react";
 import { Card, Col, Row } from "react-bootstrap";
-import { Link } from "react-router-dom";
 import AuthContext from "../store/auth-context";
 
 function Home() {
@@ -37,8 +36,8 @@ function Home() {
       setError(error.message);
     });
   
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  },[]);
+  
+  },[authCtx]);
 
   if(loading){
     return <section className="mt-3" style={{textAlignVertical: "center",textAlign: "center"}}>
@@ -60,12 +59,6 @@ function Home() {
       >
         Welcome to Learning Management System
       </h2>
-      <h5
-        className="mt-3"
-        style={{ textAlignVertical: "center", textAlign: "center" }}
-      >
-        <Link to="/teacher/home">Go to Teacher's view</Link>
-      </h5>
       <Row xs={1} sm={3} className="m-2 d-flex">
         <Col sm={4}>
           <Card className="p-0 m-2">
