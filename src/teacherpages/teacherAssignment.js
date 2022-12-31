@@ -23,8 +23,6 @@ function TeacherAsssignment() {
         idCourses.push(course.id)  
       ));
 
-      console.log(courseList);
-
       const responseTwo = await fetch("/assignment/list/course", {
         method: "POST",
         headers: {
@@ -55,20 +53,20 @@ function TeacherAsssignment() {
 
   const deleteHandler = (e) => {
     e.preventDefault();
-    const newAssignment = [];
-    for (let i = 0; i < assignments.length; i++) {
-      // eslint-disable-next-line
-      if(assignments[i].id != e.target.value){
-        newAssignment.push(assignments[i]);
-      }
-    }
-    setAssignment(newAssignment);
     fetch('/assignment/' + e.target.value, {
       method: "DELETE"
     })
       .then((res) => {
         if (res.ok) {
           alert("Assignment Deleted successfully.");
+          const newAssignment = [];
+          for (let i = 0; i < assignments.length; i++) {
+            // eslint-disable-next-line
+            if (assignments[i].id != e.target.value) {
+              newAssignment.push(assignments[i]);
+            }
+          }
+          setAssignment(newAssignment);
         }
       })
       .catch((err) => {
@@ -127,7 +125,7 @@ function TeacherAsssignment() {
                 <td>
                   <Button
                     size="sm"
-                    color="danger"
+                    variant="outline-danger"
                     value={assignment.id}
                     onClick={deleteHandler}
                   >

@@ -36,20 +36,20 @@ function TeacherStudent() {
 
   const deleteHandler = (e) => {
     e.preventDefault();
-    const newStudent = [];
-    for (let i = 0; i < students.length; i++) {
-      // eslint-disable-next-line
-      if(students[i].id != e.target.value){
-        newStudent.push(students[i]);
-      }
-    }
-    setStudent(newStudent);
     fetch('/student/' + e.target.value, {
       method: "DELETE"
     })
       .then((res) => {
         if (res.ok) {
           alert("Student Deleted successfully.");
+          const newStudent = [];
+          for (let i = 0; i < students.length; i++) {
+            // eslint-disable-next-line
+            if (students[i].id != e.target.value) {
+              newStudent.push(students[i]);
+            }
+          }
+          setStudent(newStudent);
         }
       })
       .catch((err) => {
@@ -109,7 +109,7 @@ function TeacherStudent() {
                 <td>
                   <Button
                     size="sm"
-                    color="danger"
+                    variant="outline-danger"
                     value={student.id}
                     onClick={deleteHandler}
                   >

@@ -19,7 +19,6 @@ function EnrollmentDetails() {
       }
 
       const responseData = await response.json();
-      console.log(responseData);
       if(responseData.length === 0){
         setError("No courses found");
       }
@@ -39,6 +38,30 @@ function EnrollmentDetails() {
 
     // eslint-disable-next-line
   },[params.studentID]);
+
+  const deleteHandler = (e) => {
+    e.preventDefault();
+    
+    fetch('/enrollment/student/' + params.studentID + '/course/' + e.target.value, {
+      method: "DELETE"
+    })
+      .then((res) => {
+        if (res.ok) {
+          alert("Enrollment Deleted successfully.");
+          const newEnrollment = [];
+          for (let i = 0; i < courses.length; i++) {
+            // eslint-disable-next-line
+            if (courses[i].id != e.target.value) {
+              newEnrollment.push(courses[i]);
+            }
+          }
+          setCourse(newEnrollment);
+        }
+      })
+      .catch((err) => {
+        alert(err.message);
+      });
+  };
 
   if (loading) {
     return (
@@ -90,7 +113,7 @@ function EnrollmentDetails() {
                 <td>{index + 1}</td>
                 <td style={{ whiteSpace: "nowrap" }}>{course.course_name}</td>
                 <td>
-                  <Button size="sm" color="danger">
+                  <Button size="sm" variant="outline-danger" value={course.id} onClick={deleteHandler}>
                     Remove
                   </Button>
                 </td>

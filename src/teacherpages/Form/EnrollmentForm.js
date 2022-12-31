@@ -40,8 +40,6 @@ function EnrollmentForm() {
       course_id: enteredCourseId
     };
 
-    console.log(JSON.stringify(enrollment));
-
     fetch("/enrollment/", {
       method: "POST",
       headers: {

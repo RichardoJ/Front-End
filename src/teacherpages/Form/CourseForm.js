@@ -82,7 +82,6 @@ function CourseForm() {
       course_link:enteredLink,
       details: enteredDetail,
     };
-    console.log(JSON.stringify(course));
 
     let url = '/course/add/' + authCtx.idDB;
 

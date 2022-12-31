@@ -79,7 +79,6 @@ function Modules() {
       .catch((err) => {
         alert(err.message);
       });
-    console.log(e.target.value);
   }
 
   return (

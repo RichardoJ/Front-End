@@ -26,7 +26,6 @@ function Home() {
         }
 
         authCtx.valid();
-        console.log("Validation Status After : " + authCtx.validation);
       }
       setLoading(false);
     };

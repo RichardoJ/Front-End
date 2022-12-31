@@ -49,14 +49,11 @@ function ModuleForm() {
     formData.append("name", enteredName);
     formData.append("details", enteredDetails);
 
-    console.log(formData);
-
     fetch("/modules/course/" + params.courseID, {
       method: "POST",
       body: formData,
     }).then((res) => {
       if (res.ok) {
-        console.log(res.data);
         alert("File uploaded successfully.");
       }
     })

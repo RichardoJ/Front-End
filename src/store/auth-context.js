@@ -83,7 +83,6 @@ export const AuthContextProvider = (props) => {
   }, []);
 
   const loginHandler = (token, uid, expirationTime) => {
-    console.log(token);
     setToken(token);
     setUID(uid);
     localStorage.setItem('token',token);
@@ -96,7 +95,6 @@ export const AuthContextProvider = (props) => {
   };
 
   const validateToken = () => {
-    console.log("dipanggil gan");
     setStatus(true);
     localStorage.setItem('status', true);
   }
@@ -113,7 +111,6 @@ export const AuthContextProvider = (props) => {
 
   useEffect(() => {
     if(tokenData){
-      console.log(tokenData.duration);
       logoutTimer = setTimeout(logoutHandler, tokenData.duration);
     }
   }, [tokenData, logoutHandler]);

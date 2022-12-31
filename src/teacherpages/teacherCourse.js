@@ -59,7 +59,6 @@ function TeacherCourses() {
   }
 
   const passDeletedId = (id) => {
-    console.log(id);
     const newCourse = [];
     for (let i = 0; i < courses.length; i++) {
       // eslint-disable-next-line

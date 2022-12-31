@@ -28,7 +28,6 @@ function Assignment(props) {
       
 
       const idCourses = JSON.parse(localStorage.getItem('courses'));
-      console.log(idCourses);
 
       const responseTwo = await fetch("/assignment/list/course", {
         method: "POST",
@@ -67,7 +66,6 @@ function Assignment(props) {
 
       const responseDataThree = await responseThree.json();
       setStatusAssignment(responseDataThree);
-      console.log(responseDataThree);
       setLoading(false);
     };
 
