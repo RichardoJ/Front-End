@@ -20,6 +20,11 @@ function Modules() {
 
       const responseData = await response.json();
 
+      
+      if(responseData.length === 0){
+        setError("No modules found");
+      }
+
       setModules(responseData);
       setLoading(false)
     };

@@ -20,6 +20,11 @@ function TeacherCourses() {
 
       const responseData = await response.json();
 
+      
+      if(responseData.length === 0){
+        setError("No courses found");
+      }
+
       setCourse(responseData);
       setLoading(false);
     };
@@ -49,11 +54,28 @@ function TeacherCourses() {
 
   if (error) {
     return (
-      <section
-        className="mt-3"
-        style={{ textAlignVertical: "center", textAlign: "center" }}
-      >
-        <p>{error}</p>
+      <section className="mt-3">
+        <Row className="align-items-center">
+          <Col
+            sm={12}
+            md={9}
+            className="d-flex justify-content-md-start justify-content-sm-center"
+          >
+            <h1>Course</h1>
+          </Col>
+          <Col
+            sm={12}
+            md={3}
+            className="d-flex justify-content-md-end justify-content-sm-center"
+          >
+            <Link to={"/courseform"}>
+              <Button>Add Course</Button>
+            </Link>
+          </Col>
+        </Row>
+        <p style={{ textAlignVertical: "center", textAlign: "center" }}>
+          {error}
+        </p>
       </section>
     );
   }

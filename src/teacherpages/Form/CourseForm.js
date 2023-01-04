@@ -1,5 +1,4 @@
-import React, { useContext, useState } from "react";
-import { Alert } from "react-bootstrap";
+import React, { useContext } from "react";
 import Button from "react-bootstrap/Button";
 import Col from "react-bootstrap/Col";
 import Form from "react-bootstrap/Form";
@@ -11,7 +10,6 @@ import useInput from "../Hooks/use-input";
 
 function CourseForm() {
   const authCtx = useContext(AuthContext);
-  const [success, setSuccess] = useState(false);
 
   //Name
   const {
@@ -106,7 +104,6 @@ function CourseForm() {
       resetEndDateInput()
       resetDetailInput()
       resetLinkInput()
-      setSuccess(true);
     })
 
     
@@ -187,7 +184,6 @@ function CourseForm() {
           Submit
         </Button>
       </Form>
-      {success === true && <Alert>Success</Alert>}
     </Row>
   );
 }

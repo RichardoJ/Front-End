@@ -1,4 +1,4 @@
-import React, {useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Button, Col, Row, Table } from "react-bootstrap";
 import { Link } from "react-router-dom";
 
@@ -17,21 +17,25 @@ function TeacherEnrollment() {
 
       const responseData = await response.json();
 
+      if (responseData.length === 0) {
+        setError("No students found");
+      }
+
       setStudent(responseData);
       setLoading(false);
     };
 
     getData().catch((error) => {
       setLoading(false);
-      if(Object.keys(students).length === 0){
+      if (Object.keys(students).length === 0) {
         setError("No students found");
-      }else{
+      } else {
         setError(error.message);
       }
     });
-    
-  // eslint-disable-next-line
-  },[]);
+
+    // eslint-disable-next-line
+  }, []);
 
   if (loading) {
     return (
@@ -46,15 +50,31 @@ function TeacherEnrollment() {
 
   if (error) {
     return (
-      <section
-        className="mt-3"
-        style={{ textAlignVertical: "center", textAlign: "center" }}
-      >
-        <p>{error}</p>
+      <section className="mt-3">
+        <Row className="align-items-center">
+          <Col
+            sm={12}
+            md={9}
+            className="d-flex justify-content-md-start justify-content-sm-center"
+          >
+            <h1>Enrollment</h1>
+          </Col>
+          <Col
+            sm={12}
+            md={3}
+            className="d-flex justify-content-md-end justify-content-sm-center"
+          >
+            <Link to={"/enrollmentform"}>
+              <Button>Enrollment Form</Button>
+            </Link>
+          </Col>
+        </Row>
+        <p style={{ textAlignVertical: "center", textAlign: "center" }}>
+          {error}
+        </p>
       </section>
     );
   }
-
 
   return (
     <div className="m-3">

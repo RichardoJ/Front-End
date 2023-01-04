@@ -14,6 +14,8 @@ function AssignmentStudentUpload(props) {
   const name = location.state.assignmentName;
   const details = location.state.assignmentDetails;
   const deadline = location.state.assignmentDate;
+  const [fileExtensionError, setFileExtensionError] = useState(false);
+  const [valid, setValid] = useState(false);
 
   useEffect(() => {
     const getData = async () => {
@@ -36,9 +38,20 @@ function AssignmentStudentUpload(props) {
   
   },[authCtx.idDB, assignmentId]);
 
+  function getExtension(filename) {
+    return filename.split('.').pop()
+  }
+
   const fileChangeHandler = (e) => {
     e.preventDefault();
-    setFile(e.target.files[0]);
+    var extension = getExtension(e.target.files[0].name)
+    if(extension === "pdf"){
+      setFile(e.target.files[0]);
+      setValid(true);
+      setFileExtensionError(false);
+    }else{
+      setFileExtensionError(true);
+    }
   };
 
   const fileSubmitHandler = () => {
@@ -83,10 +96,12 @@ function AssignmentStudentUpload(props) {
       <h4>UPLOAD : </h4>
       {status === false && <Form.Group controlId="formFileMultiple" className="mb-3">
         <Form.Label>Multiple files input example</Form.Label>
-        <Form.Control type="file" onChange={fileChangeHandler} />
+        <Form.Control type="file" onChange={fileChangeHandler} accept=".pdf" />
       </Form.Group>}
       {status === true && <p>You Have Already Uploaded a File, Please Contact Your Teacher if there is any problem</p>}
-      {status === false && <Button onClick={fileSubmitHandler}>Submit File</Button>}
+      {fileExtensionError === true && <p style={{ color: 'red' }}>Upload only PDF file</p>}
+      {status === false && <Button onClick={fileSubmitHandler} disabled={!valid}>Submit File</Button>}
+      
     </div>
   );
 }

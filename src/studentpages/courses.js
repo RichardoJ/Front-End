@@ -20,6 +20,11 @@ function Courses() {
 
       const responseData = await response.json();
 
+      
+      if(responseData.length === 0){
+        setError("No courses found");
+      }
+
       localStorage.setItem('cobacourses', JSON.stringify(responseData));
 
       setCourse(responseData);

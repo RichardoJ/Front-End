@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
 import Table from "react-bootstrap/Table";
-import { Button, ButtonGroup, Col, Row } from "react-bootstrap";
+import { Button, Col, Row } from "react-bootstrap";
 
 function TeacherModules() {
   const params = useParams();
@@ -19,6 +19,12 @@ function TeacherModules() {
       }
 
       const responseData = await response.json();
+
+      
+      if(responseData.length === 0){
+        setError("No modules found");
+      }
+
       setModules(responseData);
       setLoading(false);
     };
@@ -34,7 +40,7 @@ function TeacherModules() {
     });
     
   // eslint-disable-next-line
-  }, [modules]);
+  }, [params.courseID]);
 
   if (loading) {
     return (
@@ -65,6 +71,29 @@ function TeacherModules() {
     );
   }
 
+  const deleteHandler = (e) => {
+    e.preventDefault();
+    fetch('/modules/' + e.target.value, {
+      method: "DELETE"
+    })
+      .then((res) => {
+        if (res.ok) {
+          alert("Module Deleted successfully.");
+          const newModules = [];
+          for (let i = 0; i < modules.length; i++) {
+            // eslint-disable-next-line
+            if (modules[i].id != e.target.value) {
+              newModules.push(modules[i]);
+            }
+          }
+          setModules(newModules);
+        }
+      })
+      .catch((err) => {
+        alert('Error when deleting');
+      });
+  };
+
   return (
     <div className="m-3">
       <Row className="align-items-center">
@@ -73,41 +102,39 @@ function TeacherModules() {
         </Col>
         <Col sm={4} className="d-flex justify-content-end">
           <Link to={"/modulesform/" + params.courseID}>
-            <Button >Add Modules</Button>
+            <Button>Add Modules</Button>
           </Link>
         </Col>
       </Row>
       <div className="table-responsive">
-          <Table striped bordered hover size="xs">
-            <thead>
-              <tr>
-                <th>#</th>
-                <th>Modules</th>
-                <th>Action</th>
+        <Table striped bordered hover size="xs">
+          <thead>
+            <tr>
+              <th>#</th>
+              <th>Modules</th>
+              <th>Action</th>
+            </tr>
+          </thead>
+          <tbody>
+            {modules.map((module, index) => (
+              <tr key={module.id}>
+                <td>{index + 1}</td>
+                <td style={{ whiteSpace: "nowrap" }}>{module.modules_name}</td>
+                <td>
+                  <Button
+                    size="sm"
+                    color="danger"
+                    value={module.id}
+                    onClick={deleteHandler}
+                  >
+                    Delete
+                  </Button>
+                </td>
               </tr>
-            </thead>
-            <tbody>
-              {modules.map((module, index) => (
-                <tr key={module.id}>
-                  <td>{index + 1}</td>
-                  <td style={{ whiteSpace: "nowrap" }}>
-                    {module.modules_name}
-                  </td>
-                  <td>
-                    <ButtonGroup>
-                      <Button size="sm" color="primary" className="me-2">
-                        Edit
-                      </Button>
-                      <Button size="sm" color="danger">
-                        Delete
-                      </Button>
-                    </ButtonGroup>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </Table>
-        </div>
+            ))}
+          </tbody>
+        </Table>
+      </div>
     </div>
   );
 }

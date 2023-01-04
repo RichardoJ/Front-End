@@ -27,7 +27,7 @@ function TeacherNavigationBar() {
             <Nav.Link to="/teacher/assignments" as={Link}>Assignments</Nav.Link>
             <Nav.Link to="/teacher/courses" as={Link}>Courses</Nav.Link>
             <Nav.Link to="/teacher/enrollment" as={Link}>Enrollment</Nav.Link>
-            <Nav.Link to="#profile" as={Link}>Profile</Nav.Link>
+            <Nav.Link to="/teacher/grading" as={Link}>Grading</Nav.Link>
             <Nav.Link to="/" as={Link}><Button onClick={logoutHandler}>Log Out</Button></Nav.Link>
           </Nav>
         </Navbar.Collapse>

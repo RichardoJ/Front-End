@@ -24,6 +24,8 @@ import { useContext } from 'react';
 import AuthContext from './store/auth-context';
 import TeacherEnrollment from './teacherpages/teacherEnrollment';
 import EnrollmentDetails from './teacherpages/teacherEnrollmentDetails';
+import GradingPage from './teacherpages/teacherGrades';
+import GradingForm from './teacherpages/Form/GradingForm';
 
 function App() {
   const authCtx = useContext(AuthContext);
@@ -50,6 +52,8 @@ function App() {
             {authCtx.isLoggedIn && authCtx.role === "TEACHER" &&  <Route path="/teacher/courses/:courseID/modules" element={<TeacherModules />} />}
             {authCtx.isLoggedIn && authCtx.role === "TEACHER" &&  <Route path="/teacher/enrollment" element={<TeacherEnrollment />} />}
             {authCtx.isLoggedIn && authCtx.role === "TEACHER" &&  <Route path="/teacher/enrollment/:studentID/details" element={<EnrollmentDetails />} />}
+            {authCtx.isLoggedIn && authCtx.role === "TEACHER" &&  <Route path="/teacher/grading" element={<GradingPage />} />}
+            {authCtx.isLoggedIn && authCtx.role === "TEACHER" &&  <Route path="/teacher/grading/form" element={<GradingForm />} />}
             {authCtx.isLoggedIn && authCtx.role === "TEACHER" &&  <Route path="/studentform" element={<StudentForm />} />}
             {authCtx.isLoggedIn && authCtx.role === "TEACHER" &&  <Route path="/modulesform/:courseID" element={<ModuleForm />} />}
             {authCtx.isLoggedIn && authCtx.role === "TEACHER" &&  <Route path="/assignmentform/:courseID" element={<AssignmentForm />} />}

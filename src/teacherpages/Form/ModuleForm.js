@@ -8,6 +8,8 @@ import useInput from "../Hooks/use-input";
 function ModuleForm() {
   const params = useParams();
   const [file, setFile] = useState();
+  const [fileExtensionError, setFileExtensionError] = useState(false);
+  const [valid, setValid] = useState(false);
   //Name
   const {
     value: enteredName,
@@ -30,20 +32,28 @@ function ModuleForm() {
 
   let formIsValid = false;
 
-  if(enteredNameIsValid && enteredDetailsIsValid){
+  if(enteredNameIsValid && enteredDetailsIsValid && valid){
     formIsValid = true;
   };
 
+  function getExtension(filename) {
+    return filename.split('.').pop()
+  }
+
   const fileChangeHandler = (e) => {
     e.preventDefault();
-    setFile(e.target.files[0]);
+    var extension = getExtension(e.target.files[0].name)
+    if(extension === "pdf"){
+      setFile(e.target.files[0]);
+      setValid(true);
+      setFileExtensionError(false);
+    }else{
+      setFileExtensionError(true);
+    }
   };
 
   const formSubmissionHandler = (event) => {
     event.preventDefault();
-    // if (!enteredNameIsValid) {
-    //   return;
-    // }
     const formData = new FormData();
     formData.append("file", file);
     formData.append("name", enteredName);
@@ -94,8 +104,9 @@ function ModuleForm() {
         </Form.Group>
         <Form.Group controlId="formFileMultiple" className="mb-3">
           <Form.Label>Input Module Files here</Form.Label>
-          <Form.Control type="file" onChange={fileChangeHandler}/>
+          <Form.Control type="file" onChange={fileChangeHandler} accept=".pdf"/>
         </Form.Group>
+        {fileExtensionError === true && <p style={{ color: 'red' }}>Upload only PDF file</p>}
         <Button variant="primary" type="submit" disabled={!formIsValid}>
           Submit
         </Button>

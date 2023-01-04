@@ -24,6 +24,11 @@ function TeacherStudent() {
 
       const responseData = await response.json();
 
+      
+      if(responseData.length === 0){
+        setError("No students found");
+      }
+
       setStudent(responseData);
       setLoading(false);
     };
@@ -70,11 +75,20 @@ function TeacherStudent() {
 
   if (error) {
     return (
-      <section
-        className="mt-3"
-        style={{ textAlignVertical: "center", textAlign: "center" }}
-      >
-        <p>{error}</p>
+      <section className="mt-3">
+        <Row className="align-items-center">
+          <Col sm={8}>
+            <h1>Student List</h1>
+          </Col>
+          <Col sm={4} className="d-flex justify-content-end">
+            <Link to={"/studentform"}>
+              <Button>Student Form</Button>
+            </Link>
+          </Col>
+        </Row>
+        <p style={{ textAlignVertical: "center", textAlign: "center" }}>
+          {error}
+        </p>
       </section>
     );
   }
@@ -83,7 +97,7 @@ function TeacherStudent() {
     <div className="m-3">
       <Row className="align-items-center">
         <Col sm={8}>
-          <h1>Welcome to Student List</h1>
+          <h1>Student List</h1>
         </Col>
         <Col sm={4} className="d-flex justify-content-end">
           <Link to={"/studentform"}>

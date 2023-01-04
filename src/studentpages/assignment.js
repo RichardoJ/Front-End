@@ -45,6 +45,12 @@ function Assignment(props) {
       }
 
       const responseDataTwo = await responseTwo.json();
+
+      
+      if(responseDataTwo.length === 0){
+        setError("No assignment found");
+      }
+
       const arr = [];
       responseDataTwo.map((dataId) => arr.push(dataId.id))
       setAssignment(responseDataTwo);
@@ -106,13 +112,18 @@ function Assignment(props) {
   function renderStatus(Id){
     const tdList=[]
     for(let i = 0; i < statusAssignment.length; i++){
-      if(statusAssignment[i] != null && statusAssignment[i].assignment_id_answer === Id){
+      if (
+        statusAssignment[i] != null &&
+        statusAssignment[i].assignment_id_answer === Id
+      ) {
         tdList.push(<td>{statusAssignment[i].assignment_score}</td>);
-      if (statusAssignment[i].assignment_status === 1) {
-        tdList.push(<td>Submitted</td>);
-      } else if (statusAssignment[i].assignment_status === 0) {
-        tdList.push(<td>Not Submitted</td>);
-      }
+        if (statusAssignment[i].assignment_status === 2) {
+          tdList.push(<td>Graded</td>);
+        } else if (statusAssignment[i].assignment_status === 1) {
+          tdList.push(<td>Submitted</td>);
+        } else if (statusAssignment[i].assignment_status === 0) {
+          tdList.push(<td>Not Submitted</td>);
+        }
       }
     }
     if(tdList.length === 0){

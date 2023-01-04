@@ -19,9 +19,6 @@ function EnrollmentDetails() {
       }
 
       const responseData = await response.json();
-      if(responseData.length === 0){
-        setError("No courses found");
-      }
 
       setCourse(responseData);
       setLoading(false);
@@ -29,11 +26,7 @@ function EnrollmentDetails() {
 
     getData().catch((error) => {
       setLoading(false);
-      if(Object.keys(courses).length === 0){
-        setError("No courses found");
-      }else{
-        setError(error.message);
-      }
+      setError(error.message);
     });
 
     // eslint-disable-next-line
