@@ -1,4 +1,5 @@
 import React, { useState, useContext } from "react";
+import { Alert } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
 import AuthContext from "../store/auth-context";
 import useInput from "../teacherpages/Hooks/use-input";
@@ -8,6 +9,7 @@ function AuthForm() {
   let navigate = useNavigate();
   const authCtx = useContext(AuthContext);
   const [isLoading, setIsLoading] = useState(false);
+  const [result, setResult] = useState("");
   let formIsValid = false;
 
 
@@ -59,9 +61,9 @@ function AuthForm() {
         } else {
           return res.json().then((data) => {
             let errorMessage = "Authentication Failed!";
-            // if(data && data.error && data.error.message){
-            //   errorMessage = data.error.message;
-            // }
+            resetEmailInput();
+            resetPasswordInput();
+            setResult("ERROR");
             throw new Error(errorMessage);
           });
         }
@@ -75,13 +77,17 @@ function AuthForm() {
           method:"GET"
         }).then((res) => {
           if (res.ok) {
+            setResult("SUCCESS");
             return res.json();
           } else {
             return res.json().then((data) => {
+              resetEmailInput();
+              resetPasswordInput();
               let errorMessage = "";
               if(data && data.error && data.error.message){
                 errorMessage = data.error.message;
               }
+              setResult("ERROR");
               throw new Error(errorMessage);
             });
           }
@@ -102,7 +108,7 @@ function AuthForm() {
         })
       })
       .catch((err) => {
-        alert(err.message);
+        setResult("ERROR");
       });
    
   };
@@ -110,6 +116,8 @@ function AuthForm() {
   return (
     <section className={classes.auth}>
       <h1>Login</h1>
+      {result === "SUCCESS" && <Alert >Login Successfully</Alert>}
+      {result === "ERROR" && <Alert variant="danger">Authentication Failed</Alert>}
       <form onSubmit={submitHandler}>
       {/* <form> */}
         <div className={classes.control}>
